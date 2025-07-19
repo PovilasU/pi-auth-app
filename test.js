@@ -5,6 +5,8 @@ const bcrypt = require("bcrypt");
 require("dotenv").config();
 
 const app = express();
+
+// Trust proxy (Cloudflare, NGINX, etc.)
 app.set("trust proxy", 1);
 
 const pool = new Pool({
@@ -15,22 +17,25 @@ const pool = new Pool({
   port: process.env.DB_PORT,
 });
 
+// Middleware
 app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Session setup
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
   cookie: {
+    // In production, cookies only sent over HTTPS
     secure: process.env.NODE_ENV === "production",
     httpOnly: true,
     sameSite: "lax"
   }
 }));
 
-// Serve home page with Register and Login forms
+// Home page with forms and frontend JS
 app.get("/", (req, res) => {
   res.send(`
   <!DOCTYPE html>
@@ -143,6 +148,10 @@ app.post("/register", async (req, res) => {
     res.send("Registration successful!");
   } catch (err) {
     console.error("Register error:", err);
+    if (err.code === "23505") {
+      // Unique violation (username exists)
+      return res.status(400).send("Username already exists");
+    }
     res.status(400).send("User may already exist or DB error");
   }
 });
@@ -184,5 +193,6 @@ app.get("/profile", (req, res) => {
   res.json({ username: req.session.user.username });
 });
 
+// Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
