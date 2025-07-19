@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pi Auth App</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Pi Auth App</h1>
+
+    <div id="forms">
+      <h2>Register</h2>
+      <form id="registerForm">
+        <input type="text" placeholder="Username" id="registerUsername" required />
+        <input type="password" placeholder="Password" id="registerPassword" required />
+        <button type="submit">Register</button>
+      </form>
+
+      <h2>Login</h2>
+      <form id="loginForm">
+        <input type="text" placeholder="Username" id="loginUsername" required />
+        <input type="password" placeholder="Password" id="loginPassword" required />
+        <button type="submit">Login</button>
+      </form>
+    </div>
+
+    <div id="profileSection" style="display: none;">
+      <h2 id="profileInfo">Welcome</h2>
+      <button id="logoutBtn">Logout</button>
+    </div>
+
+    <p id="message"></p>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
